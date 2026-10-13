@@ -85,3 +85,78 @@ weather_df |>
 
 ```
 
+
+#Themes
+Where this lies on my plot doesn't depend on difference between variable and color, just absent of data
+Grey background and white lines dont depend on data, just has to do with overall plot structure and appearance
+or theme
+
+Shift the legend:
+```{r}
+weather_df |> 
+  ggplot(aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = 0.5) +
+  labs(
+    title = "Temperature plot",
+    x = "Minimum daily temperature (C)",
+    y = "Maximum daily temperature (C)",
+    caption = "Data from rnoa package; temperature in 2017") +
+  scale_color_hue(
+    name = "location") +
+  viridis:: scale_color_viridis(
+    name = "Location",
+    discrete = TRUE
+  ) +
+  theme(legend.position = "bottom")
+```
+
+
+Change the overall theme - on default ggplot uses grey and white 
+  -in changing theme wipes the slate and makes it brand new, if want to do theme minimal have to do the theme first
+```{r}
+
+
+weather_df |> 
+  ggplot(aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = 0.5) +
+  labs(
+    title = "Temperature plot",
+    x = "Minimum daily temperature (C)",
+    y = "Maximum daily temperature (C)",
+    caption = "Data from rnoa package; temperature in 2017") +
+  scale_color_hue(
+    name = "location") +
+  viridis:: scale_color_viridis(
+    name = "Location",
+    discrete = TRUE
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+
+## Setting options
+determine theme for every plot in document
+ggplot2.continuous. fill = "viridis" - will fill color for points later on
+all options ensure viridis color pallet and legend on bottom
+out.width shrinks it down a little bit: use this in the future of all markdowns to ensure that it will be there
+```{r}
+library(tidyverse)
+
+knitr::opts_chunk$set(
+  fig.width = 6,
+  fig.asp = 0.6,
+  out.width = "90%"
+)
+
+theme_set(theme_minimal() + theme(legend,position = "bottom"))
+
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+
+scale_colour_discrete = scale_color_viridis_d
+scale_colour_continuous = scale_color_viridis_d
+```
+
