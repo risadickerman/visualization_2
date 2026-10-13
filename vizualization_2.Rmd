@@ -6,7 +6,82 @@ output: html_document
 ---
 
 ```{r}
+library(tidyverse)
 library(p8105.datasets)
 data("weather_df")
+library(patchwork)
+
+weather_df
+```
+
+```{r}
+weather_df |> 
+  ggplot(aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = 0.5)
+```
+
+##Labels
+```{r}
+weather_df |> 
+  ggplot(aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = 0.5) +
+  labs(
+    title = "Temperature plot",
+    x = "Minimum daily temperature (C)",
+    y = "Maximum daily temperature (C)",
+    caption = "Data from rnoa package; temperature in 2017"
+  )
+```
+
+
+## Scales
+  gives you a way to have control
+Start with same plot
+```{r}
+weather_df |> 
+  ggplot(aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = 0.5) +
+  labs(
+    title = "Temperature plot",
+    x = "Minimum daily temperature (C)",
+    y = "Maximum daily temperature (C)",
+    caption = "Data from rnoa package; temperature in 2017"
+  ) +
+  scale_x_continuous(
+    breaks = c(-15, 0, 15),
+    labels = c("-15C", "0", "15")
+  ) +
+  scale_y_continuous (
+    position = "right"
+  )
+#don't want original spacing, scale_x allows you to change it
+#scal_y lets you do a transformation of data: eg "sqrt", "log", or "right
+```
+
+```{r}
+weather_df |> 
+  ggplot(aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = 0.5) +
+  labs(
+    title = "Temperature plot",
+    x = "Minimum daily temperature (C)",
+    y = "Maximum daily temperature (C)",
+    caption = "Data from rnoa package; temperature in 2017") +
+  scale_color_hue(
+    name = "location") +
+  viridis:: scale_color_viridis(
+    name = "Location",
+    discrete = TRUE
+  )
+
+
+
+#Defined mapping between the color variable and the name  
+  #scale_color can edit color feature, can adjust hue
+#scale_x - change title of caption
+  #in scale if we want to change color of the name, can change caption to location (what all the locations are called)
+#viridis package - scale color viridis assumes it is a continuous variable, have to specify discrete
+  #viridis pallet: if you show this to someone who is color blind, it will be more accessible to them.
+
 ```
 
