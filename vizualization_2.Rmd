@@ -160,3 +160,58 @@ scale_colour_discrete = scale_color_viridis_d
 scale_colour_continuous = scale_color_viridis_d
 ```
 
+
+## Data args in 'geom'
+
+```{r}
+central_park = weather_df |> 
+  filter(name == "CentralPark_NY")
+
+waikiki = weather_df |> 
+  filter(name == "Molokai_HI")
+
+ggplot(data = waikiki, aes(x = date, y = tmax, color = name)) +
+  geom_point() +
+  geom_line(data =central_park)
+```
+Use mostly for summary that is more complicated. Will create a separate dataset for each argument
+
+## 'Patchwork'
+remember faceting? Creating the exact same plot. Create plot separately for each name
+putting a scatterplot next to a scatterplot is not possible with facceting
+
+```{r}
+weather_df |> 
+  ggplot(aes(x = tmin, fill = name)) +
+  geom_density ( alpha = 0.5) +
+  facet_grid(. ~ name)
+```
+
+
+
+```{r}
+tmax_tmin_p = 
+  weather_df |> 
+  ggplot(aes(x = tmin, y= tmax, color = name)) +
+  geom_point(alpha = 0.5) +
+  theme(legend.position = "none")
+tmax_tmin_p
+
+prcp_dens_p = 
+  weather_df |> 
+  filter(prcp > 0) |> 
+  ggplot(aes(x = prcp, fill = name)) +
+  geom_density(alpha = 0.5)
+prcp_dens_p
+
+tmax_date = 
+  weather_df |> 
+  ggplot(aes(x = date, y = tmax, color = name)) +
+  geom_point() +
+  geom_smooth(se = FALSE) +
+  theme(legend.position = "none")
+tmax_date
+
+(tmax_tmin_p + prcp_dens_p) / tmax_date
+```
+create individual panels and use patchwork to join them
