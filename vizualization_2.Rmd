@@ -214,4 +214,52 @@ tmax_date
 
 (tmax_tmin_p + prcp_dens_p) / tmax_date
 ```
-create individual panels and use patchwork to join them
+Create individual panels and use patchwork to join them.
+
+## Data manipulation
+
+```{r}
+weather_df |> 
+  mutate(
+    name = factor(name),
+    name = forcats::fct_relevel(name, c("Molokai_HI"))
+  ) |> 
+  ggplot(aes(x = name, y = tmax, fill = name)) +
+  geom_violin(alpha = 0.5)
+```
+going in alphabetical order by default due to convoluted reasons. To change that
+and put it in different order, want these to be factors and in particular order that I specify.
+Manipulate dataset first > changed name to factor: Central park - 1, Molokai - 2, etc.
+
+If want to change order, do it by manipulating factor variable
+setting molokaki to first will make it factor number 1 > Central park -2 , etc.
+
+
+Controlling factors is important
+
+What if I want densities for tmin and tmax simultaneously.
+Want to create density plot with temperature, 1 density for 1 density of temps, 1 for another
+```{r}
+weather_df |> 
+  filter(name == "CentralPark_NY") |> 
+  pivot_longer(
+    tmax:tmin,
+    names_to = "observation",
+    values_to = "temperatures"
+  ) |> 
+  ggplot(aes(x = temperatures, fill = observation)) +
+  geom_density(alpha = 0.5)
+```
+
+```{r}
+weather_df |> 
+  pivot_longer(
+    tmax:tmin,
+    names_to = "observation",
+    values_to = "temperatures"
+  ) |> 
+  drop_na() |> 
+  ggplot(aes(x = temperatures, fill = observation)) +
+  geom_density(alpha = 0.5) +
+  facet_grid(. ~ name)
+```
